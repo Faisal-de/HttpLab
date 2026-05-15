@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management Portal - Production</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 30px; background: #f4f7f6; color: #333; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .input-area { background: #eef2f3; padding: 20px; border-radius: 8px; margin-bottom: 30px; display: flex; gap: 10px; align-items: center; }
+        input { padding: 12px; border: 1px solid #ccc; border-radius: 6px; flex: 1; font-size: 1rem; }
+        button { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .btn-login { background: #3498db; color: white; width: 100%; }
+        .btn-add { background: #27ae60; color: white; }
+        .btn-logout { background: #e74c3c; color: white; float: right; padding: 8px 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #3498db; color: white; text-align: left; padding: 15px; }
+        td { padding: 15px; border-bottom: 1px solid #ddd; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button id="logoutBtn" class="btn-logout hidden" onclick="logout()">Logout</button>
+    <h1 id="mainTitle">Student Portal Login</h1>
+
+    <div id="loginSection">
+        <p>Please enter your credentials to access your dashboard.</p>
+        <div class="input-area" style="flex-direction: column;">
+            <input type="text" id="usernameInput" placeholder="Username (e.g., faisal or admin)">
+            <input type="password" id="passwordInput" placeholder="Password (e.g., pass123 or admin123)">
+            <button class="btn-login" onclick="handleLogin()">Login to System</button>
+        </div>
+    </div>
+
+    <div id="studentDashboard" class="hidden">
+        <h3>Welcome back, <span id="studentNameDisplay"></span>!</h3>
+        <p>You are logged in as a <strong>Student</strong>.</p>
+        <div class="input-area">
+            <input type="text" id="courseName" placeholder="Enter Course Name to Enroll">
+            <button class="btn-add" onclick="alert('Course Added! (Log: 201 Created)')">Enroll Now</button>
+        </div>
+    </div>
+
+    <div id="adminDashboard" class="hidden">
+        <h3>System Administrator Control Panel</h3>
+        <p>Managing all student records in <strong>StudentPortalDB</strong>.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="adminUserTable">
+            </tbody>
+        </table>
+        <br>
+        <button style="background:#8e44ad; color:white;" onclick="triggerCrash()">Test System Crash (Log: 500 Error)</button>
+    </div>
+</div>
+
+<script>
+    async function handleLogin() {
+        const user = document.getElementById('usernameInput').value;
+        const pass = document.getElementById('passwordInput').value;
+
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: user, password: pass })
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            showPage(data);
+        } else if (response.status === 401) {
+            alert("401 Unauthorized: Invalid username or password. Check your logs!");
+        } else {
+            alert("Something went wrong. Check the Network tab!");
+        }
+    }
+
+    function showPage(userData) {
+        // Hide Login
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('logoutBtn').classList.remove('hidden');
+        document.getElementById('mainTitle').innerText = "Dashboard";
+
+        if (userData.role === 'Admin') {
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            document.getElementById('adminUserTable').innerHTML = `<tr><td>1</td><td>${userData.fullName}</td><td>${userData.role}</td><td>Active</td></tr>`;
+        } else {
+            document.getElementById('studentDashboard').classList.remove('hidden');
+            document.getElementById('studentNameDisplay').innerText = userData.fullName;
+        }
+    }
+
+    function logout() {
+        location.reload();
+    }
+
+    async function triggerCrash() {
+        await fetch('/api/crash'); 
+        alert("Check your log file for the 500 Error!");
+    }
+</script>
+
+</body>
+</html>
