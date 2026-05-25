@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HttpLab")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+45a909fc7b71e5fa4fc078b87859c38c5f28d50d")]
 [assembly: System.Reflection.AssemblyProductAttribute("HttpLab")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HttpLab")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
