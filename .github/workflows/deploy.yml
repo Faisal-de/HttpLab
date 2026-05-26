@@ -17,8 +17,15 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0' 
+
+    - name: Install EF Core Tools
+      run: dotnet tool install --global dotnet-ef
+
     - name: Restore NuGet Packages
       run: dotnet restore
+    - name: Apply Database Migrations
+      run: |
+        dotnet ef database update --project ./HttpLab.csproj --connection "${{ secrets.DB_CONNECTION_STRING }}"
 
     - name: Build and Publish Application
       run: dotnet publish ./HttpLab.csproj --configuration Release --output ./publish
