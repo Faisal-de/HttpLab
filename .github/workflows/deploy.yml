@@ -13,30 +13,34 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
+    # Setup the correct .NET SDK version on the GitHub runner
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0' 
 
+    # Install Entity Framework Core Tools globally on the runner
     - name: Install EF Core Tools
       run: dotnet tool install --global dotnet-ef
 
+    # Explicitly add the missing design package to resolve compilation errors
     - name: Add EF Core Design Package
       run: dotnet add ./HttpLab.csproj package Microsoft.EntityFrameworkCore.Design
 
+    # Cleanly restore all project NuGet dependencies
     - name: Restore NuGet Packages
-      run: dotnet restore
+      run: dotnet restore ./HttpLab.csproj
 
+    # Apply database schema migrations directly to SmarterASP SQL Server
     - name: Apply Database Migrations
       run: |
         dotnet ef database update --project ./HttpLab.csproj --startup-project ./HttpLab.csproj --connection "${{ secrets.DB_CONNECTION_STRING }}"
 
+    # Compile the application into a clean release layout folder
     - name: Build and Publish Application
       run: dotnet publish ./HttpLab.csproj --configuration Release --output ./publish
 
-    - name: Create Offline File to UnLock IIS Processes
-      run: echo "Server updating, please wait..." > ./publish/app_offline.htm
-
+    # Sync compiled binary files directly into your active /site1/ folder via FTP
     - name: Upload Files to Server via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
@@ -45,8 +49,3 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }} 
         local-dir: ./publish/
         server-dir: /site1/
-
-    - name: Bring Application Back Online
-      run: |
-        echo "Deleting offline file..."
-        # This will be handled on the next request or automatically by the clean deployment
