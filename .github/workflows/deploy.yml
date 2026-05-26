@@ -17,12 +17,11 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0' 
-
     - name: Restore NuGet Packages
       run: dotnet restore
 
     - name: Build and Publish Application
-      run: dotnet publish --configuration Release --output ./publish
+      run: dotnet publish ./HttpLab.csproj --configuration Release --output ./publish
 
     - name: Upload Files to Server via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -31,4 +30,4 @@ jobs:
         username: faisal0101-001             
         password: ${{ secrets.FTP_PASSWORD }} 
         local-dir: ./publish/
-        server-dir: /wwwroot/               
+        server-dir: /site1/
