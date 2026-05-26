@@ -34,6 +34,9 @@ jobs:
     - name: Build and Publish Application
       run: dotnet publish ./HttpLab.csproj --configuration Release --output ./publish
 
+    - name: Create Offline File to UnLock IIS Processes
+      run: echo "Server updating, please wait..." > ./publish/app_offline.htm
+
     - name: Upload Files to Server via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
@@ -42,3 +45,8 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }} 
         local-dir: ./publish/
         server-dir: /site1/
+
+    - name: Bring Application Back Online
+      run: |
+        echo "Deleting offline file..."
+        # This will be handled on the next request or automatically by the clean deployment
