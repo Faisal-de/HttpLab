@@ -1,6 +1,0 @@
-2026-05-15 15:21:45.402 +05:00 [INF] HTTP GET /index.html responded 200 in 141.2727 ms
-2026-05-15 15:21:46.647 +05:00 [INF] HTTP GET /favicon.ico responded 404 in 4.6851 ms
-2026-05-15 15:27:17.385 +05:00 [WRN] SECURITY: Failed login attempt for user: faisal
-2026-05-15 15:27:17.385 +05:00 [WRN] SECURITY: Failed login attempt for user: faisal
-2026-05-15 15:27:17.398 +05:00 [INF] HTTP POST /api/login responded 401 in 3744.8932 ms
-2026-05-15 15:27:17.398 +05:00 [INF] HTTP POST /api/login responded 401 in 1718.8961 ms
