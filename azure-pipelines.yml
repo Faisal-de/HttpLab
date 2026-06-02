@@ -15,25 +15,25 @@ steps:
     version: '8.0.x'
 
 - script: |
-    dotnet tool install --global dotnet-ef --version 8.*
-  displayName: 'Install EF Core Tools'
-  continueOnError: true
+    dotnet new tool-manifest --force
+    dotnet tool install dotnet-ef --version 8.*
+  displayName: 'Install EF Core Tools Locally'
 
 - script: |
-    dotnet restore
-  displayName: 'Restore NuGet Packages'
+    dotnet restore HttpLab.sln
+  displayName: 'Restore NuGet Packages via Solution'
 
 - script: |
-    dotnet add package Microsoft.EntityFrameworkCore.Design
+    dotnet add HttpLab.csproj package Microsoft.EntityFrameworkCore.Design
   displayName: 'Add EF Core Design Package'
 
 - script: |
-    dotnet ef database update --connection "$(DB_CONNECTION_STRING)"
+    dotnet tool run dotnet-ef database update --project HttpLab.csproj --startup-project HttpLab.csproj --connection "$(DB_CONNECTION_STRING)"
   displayName: 'Apply Database Migrations'
 
 - script: |
-    dotnet publish --configuration Release --output $(Build.SourcesDirectory)/publish
-  displayName: 'Build and Publish Application'
+    dotnet publish HttpLab.sln --configuration Release --output $(Build.SourcesDirectory)/publish
+  displayName: 'Build and Publish Solution'
 
 - task: FtpUpload@2
   displayName: 'Upload Files to SmarterASP via FTP'
