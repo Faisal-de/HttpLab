@@ -2,7 +2,9 @@ trigger:
   - main
 
 pool:
-  name: Default  
+  name: Default
+  demands:
+    - Agent.Name -equals Faisal-Laptop  
 
 variables:
 - group: SmarterASP-Secrets 
