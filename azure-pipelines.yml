@@ -20,19 +20,19 @@ steps:
   continueOnError: true
 
 - script: |
-    dotnet add ./HttpLab.csproj package Microsoft.EntityFrameworkCore.Design
+    dotnet add HttpLab.csproj package Microsoft.EntityFrameworkCore.Design
   displayName: 'Add EF Core Design Package'
 
 - script: |
-    dotnet restore ./HttpLab.csproj
+    dotnet restore HttpLab.csproj
   displayName: 'Restore NuGet Packages'
 
 - script: |
-    dotnet ef database update --project ./HttpLab.csproj --startup-project ./HttpLab.csproj --connection "$(DB_CONNECTION_STRING)"
+    dotnet ef database update --project HttpLab.csproj --startup-project HttpLab.csproj --connection "$(DB_CONNECTION_STRING)"
   displayName: 'Apply Database Migrations'
 
 - script: |
-    dotnet publish ./HttpLab.csproj --configuration Release --output $(Build.SourcesDirectory)/publish
+    dotnet publish HttpLab.csproj --configuration Release --output $(Build.SourcesDirectory)/publish
   displayName: 'Build and Publish Application'
 
 - task: FtpUpload@2
