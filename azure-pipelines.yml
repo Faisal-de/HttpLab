@@ -8,12 +8,6 @@ variables:
 - group: SmarterASP-Secrets 
 
 steps:
-- task: UseDotNet@2
-  displayName: 'Setup .NET Core SDK 8.0'
-  inputs:
-    packageType: 'sdk'
-    version: '8.0.x'
-
 - script: |
     dotnet new tool-manifest --force
     dotnet tool install dotnet-ef --version 8.*
