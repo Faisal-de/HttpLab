@@ -10,7 +10,7 @@ variables:
 steps:
 - script: |
     dotnet new tool-manifest --force
-    dotnet tool install dotnet-ef --version 8.*
+    dotnet tool  install dotnet-ef --version 8.*
   displayName: 'Install EF Core Tools Locally'
 
 - script: |
@@ -29,9 +29,20 @@ steps:
     dotnet publish HttpLab.sln --configuration Release --output $(Build.ArtifactStagingDirectory)/publish
   displayName: 'Build and Publish Solution'
 
+# --- ENFORCED INDUSTRY COMPLIANT ARCHIVING TASK ---
+- task: ArchiveFiles@2
+  displayName: 'Zip Publish Output'
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/drop.zip'
+    replaceExistingArchive: true
+
+# --- MODIFIED ARTIFACT STEP: UPLOADING THE COMPACT BOX ---
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact Box: drop'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/publish'
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/drop.zip'
     ArtifactName: 'drop'
     publishLocation: 'Container'
