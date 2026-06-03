@@ -26,17 +26,12 @@ steps:
   displayName: 'Apply Database Migrations'
 
 - script: |
-    dotnet publish HttpLab.sln --configuration Release --output $(Build.SourcesDirectory)/publish
+    dotnet publish HttpLab.sln --configuration Release --output $(Build.ArtifactStagingDirectory)/publish
   displayName: 'Build and Publish Solution'
 
-- task: FtpUpload@2
-  displayName: 'Upload Files to SmarterASP via FTP'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact Box: drop'
   inputs:
-    credentialsOption: 'inputs'
-    serverUrl: 'ftp://win9079.site4now.net'
-    username: 'faisal0101-001'
-    password: '$(FTP_PASSWORD)'
-    rootDirectory: '$(Build.SourcesDirectory)/publish'
-    remoteDirectory: '/site1/'
-    clean: false
-    preservePaths: true
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/publish'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
