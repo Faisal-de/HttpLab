@@ -48,7 +48,7 @@ app.MapGet("/api/crash", () => {
 });
 
 app.MapGet("/api/maintenance", () => Results.StatusCode(503));
-
+app.MapFallbackToFile("index.html");
 app.Run();
 
 
