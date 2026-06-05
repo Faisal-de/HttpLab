@@ -33,7 +33,7 @@ steps:
   displayName: 'Zip Publish Output'
   inputs:
     rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish'
-    includeRootFolder: false
+    includeRootFolder: true
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/drop.zip'
     replaceExistingArchive: true
