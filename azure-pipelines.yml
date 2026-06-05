@@ -25,9 +25,8 @@ steps:
     dotnet tool run dotnet-ef database update --project HttpLab.csproj --startup-project HttpLab.csproj --connection "$(DB_CONNECTION_STRING)"
   displayName: 'Apply Database Migrations'
 - script: |
-    dotnet publish HttpLab.sln --configuration Release --output $(Build.ArtifactStagingDirectory)/publish /p:WebPublishMethod=FileSystem
+    dotnet publish HttpLab.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/publish /p:DeployOnBuild=true /p:WebPublishMethod=Package
   displayName: 'Build and Publish Solution'
-
 # --- ENFORCED INDUSTRY COMPLIANT ARCHIVING TASK ---
 - task: ArchiveFiles@2
   displayName: 'Zip Publish Output'
