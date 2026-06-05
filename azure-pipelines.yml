@@ -10,22 +10,29 @@ variables:
 steps:
 - script: |
     dotnet new tool-manifest --force
-    dotnet tool  install dotnet-ef --version 8.*
+    dotnet tool install dotnet-ef --version 8.*
   displayName: 'Install EF Core Tools Locally'
 
 - script: |
-    dotnet restore HttpLab.sln
-  displayName: 'Restore NuGet Packages via Solution'
+    dotnet restore HttpLab.csproj
+  displayName: 'Restore NuGet Packages'
 
 - script: |
     dotnet add HttpLab.csproj package Microsoft.EntityFrameworkCore.Design
   displayName: 'Add EF Core Design Package'
+
+- script: |
+    dotnet build HttpLab.csproj --configuration Release
+  displayName: 'Force Clean Release Compile'
+
 - script: |
     dotnet tool run dotnet-ef database update --project HttpLab.csproj --startup-project HttpLab.csproj --connection "$(DB_CONNECTION_STRING)" --no-build
   displayName: 'Apply Database Migrations'
+
 - script: |
-    dotnet publish HttpLab.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/publish
+    dotnet publish HttpLab.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/publish --no-build
   displayName: 'Build and Publish Solution'
+
 # --- ENFORCED INDUSTRY COMPLIANT ARCHIVING TASK ---
 - task: ArchiveFiles@2
   displayName: 'Zip Publish Output'
