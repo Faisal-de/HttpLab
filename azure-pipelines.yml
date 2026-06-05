@@ -18,20 +18,20 @@ steps:
   displayName: 'Restore NuGet Packages'
 
 - script: |
+    dotnet build HttpLab.csproj --configuration Release
+  displayName: 'Build Project'
+
+- script: |
     dotnet add HttpLab.csproj package Microsoft.EntityFrameworkCore.Design
   displayName: 'Add EF Core Design Package'
 
 - script: |
-    dotnet build HttpLab.csproj --configuration Release
-  displayName: 'Force Clean Release Compile'
-
-- script: |
-    dotnet tool run dotnet-ef database update --project HttpLab.csproj --startup-project HttpLab.csproj --connection "$(DB_CONNECTION_STRING)" --no-build
+    dotnet tool run dotnet-ef database update --project HttpLab.csproj --startup-project HttpLab.csproj --connection "$(DB_CONNECTION_STRING)"
   displayName: 'Apply Database Migrations'
 
 - script: |
     dotnet publish HttpLab.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/publish --no-build
-  displayName: 'Build and Publish Solution'
+  displayName: 'Publish Solution Output'
 
 # --- ENFORCED INDUSTRY COMPLIANT ARCHIVING TASK ---
 - task: ArchiveFiles@2
