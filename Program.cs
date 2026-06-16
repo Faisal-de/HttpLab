@@ -20,7 +20,10 @@ var app = builder.Build();
 
 app.UseSerilogRequestLogging(); 
 app.UseDefaultFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(app.Environment.ContentRootPath)
+});
 app.UseCors();
 
 app.MapPost("/api/login", async (UserLogin login, AppDbContext db, ILogger<Program> logger) => {
