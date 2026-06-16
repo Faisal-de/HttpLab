@@ -30,10 +30,9 @@ steps:
   displayName: 'Apply Database Migrations'
 
 - script: |
-    dotnet publish HttpLab.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/publish --no-build
+    dotnet publish HttpLab.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/publish
   displayName: 'Publish Solution Output'
 
-# --- ENFORCED INDUSTRY COMPLIANT ARCHIVING TASK ---
 - task: ArchiveFiles@2
   displayName: 'Zip Publish Output'
   inputs:
@@ -43,7 +42,6 @@ steps:
     archiveFile: '$(Build.ArtifactStagingDirectory)/drop.zip'
     replaceExistingArchive: true
 
-# --- MODIFIED ARTIFACT STEP: UPLOADING THE COMPACT BOX ---
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact Box: drop'
   inputs:
