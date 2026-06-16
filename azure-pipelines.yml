@@ -22,7 +22,7 @@ steps:
   displayName: 'Build Project'
 
 - script: |
-    dotnet add HttpLab.csproj package Microsoft.EntityFrameworkCore.Design
+    dotnet add HttpLab.csproj package Microsoft.EntityFrameworkCore.Design --version 8.0.11
   displayName: 'Add EF Core Design Package'
 
 - script: |
