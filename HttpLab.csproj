@@ -13,8 +13,4 @@
     <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="index.html" CopyToPublishDirectory="Always" TargetPath="wwwroot\index.html" />
-  </ItemGroup>
-
 </Project>
