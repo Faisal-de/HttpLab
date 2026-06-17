@@ -33,6 +33,14 @@ steps:
     dotnet publish HttpLab.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/publish
   displayName: 'Publish Solution Output'
 
+# 🔥 NEW AUTOMATION TASK ADDED HERE:
+- task: CopyFiles@2
+  displayName: 'Automate Frontend wwwroot Injection'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)'
+    Contents: 'index.html'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/publish/wwwroot'
+
 - task: ArchiveFiles@2
   displayName: 'Zip Publish Output'
   inputs:
