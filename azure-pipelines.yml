@@ -29,18 +29,20 @@ steps:
     dotnet tool run dotnet-ef database update --project HttpLab.csproj --startup-project HttpLab.csproj --connection "$(DB_CONNECTION_STRING)"
   displayName: 'Apply Database Migrations'
 
-- script: |
-    # 1. Run standard publication
+- powershell: |
+    # 1. Run standard compilation output
     dotnet publish HttpLab.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/publish
 
-    # 2. Safety check: If .NET didn't automatically build wwwroot, force create it
+    # 2. Setup directory tracking
     $publishPath = "$(Build.ArtifactStagingDirectory)/publish"
     $wwwrootPath = "$publishPath/wwwroot"
+
+    # 3. Create wwwroot if it doesn't already exist
     if (-not (Test-Path -Path $wwwrootPath)) {
         New-Item -ItemType Directory -Force -Path $wwwrootPath
     }
 
-    # 3. Safety check: Only try to move index.html files if they are sitting loose in the root layout
+    # 4. Check if files are loose in root and move them inside wwwroot
     if (Test-Path -Path "$publishPath/index.html*") {
         Move-Item -Path "$publishPath/index.html*" -Destination "$wwwrootPath/"
     }
