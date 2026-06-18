@@ -30,8 +30,21 @@ steps:
   displayName: 'Apply Database Migrations'
 
 - script: |
+    # 1. Run standard publication
     dotnet publish HttpLab.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/publish
-  displayName: 'Publish Solution Output'
+
+    # 2. Safety check: If .NET didn't automatically build wwwroot, force create it
+    $publishPath = "$(Build.ArtifactStagingDirectory)/publish"
+    $wwwrootPath = "$publishPath/wwwroot"
+    if (-not (Test-Path -Path $wwwrootPath)) {
+        New-Item -ItemType Directory -Force -Path $wwwrootPath
+    }
+
+    # 3. Safety check: Only try to move index.html files if they are sitting loose in the root layout
+    if (Test-Path -Path "$publishPath/index.html*") {
+        Move-Item -Path "$publishPath/index.html*" -Destination "$wwwrootPath/"
+    }
+  displayName: 'Publish Solution Output and Structure Check'
 
 - task: ArchiveFiles@2
   displayName: 'Zip Publish Output'
