@@ -28,6 +28,7 @@ steps:
 - script: |
     dotnet tool run dotnet-ef database update --project HttpLab.csproj --startup-project HttpLab.csproj --connection "$(DB_CONNECTION_STRING)"
   displayName: 'Apply Database Migrations'
+
 - powershell: |
     # 1. Run standard compilation output
     dotnet publish HttpLab.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/publish
@@ -42,10 +43,11 @@ steps:
         New-Item -ItemType Directory -Force -Path $wwwrootPath | Out-Null
     }
 
-    # 4. AUTOMATED FORCE INJECTION: Grab the index.html directly from your source folder and drop it in the target wwwroot
-    Write-Host "Forcing index.html copy from source workspace to publish artifact..."
-    Copy-Item -Path "wwwroot/index.html" -Destination "$wwwrootPath/" -Force
+    # 4. AUTOMATED FORCE INJECTION: Use the absolute workspace path to find the file
+    Write-Host "Forcing index.html copy from absolute source path..."
+    Copy-Item -Path "$(Build.SourcesDirectory)/wwwroot/index.html" -Destination "$wwwrootPath/" -Force -ErrorAction Stop
   displayName: 'Publish Solution Output and Force wwwroot Placement'
+
 - task: ArchiveFiles@2
   displayName: 'Zip Publish Output'
   inputs:
