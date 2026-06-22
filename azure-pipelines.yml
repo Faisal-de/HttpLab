@@ -37,18 +37,20 @@ steps:
     $publishPath = "$(Build.ArtifactStagingDirectory)/publish"
     $wwwrootPath = "$publishPath/wwwroot"
 
-    # 3. FORCE create the wwwroot directory (ignores or bypasses if it already exists)
+    # 3. FORCE create the wwwroot directory in the publish output layout
     New-Item -ItemType Directory -Force -Path $wwwrootPath | Out-Null
 
-    # 4. FORCE copy index.html directly into the wwwroot folder from the publish folder
-    Copy-Item -Path "$publishPath/index.html*" -Destination "$wwwrootPath/" -Force -ErrorAction SilentlyContinue
-    
-    # 5. Backup check: If index.html didn't exist in publish root, copy it directly from your source code workspace folder
+    # 4. Try to move loose files from publish root if they exist
+    if (Test-Path -Path "$publishPath/index.html*") {
+        Move-Item -Path "$publishPath/index.html*" -Destination "$wwwrootPath/" -Force
+    }
+
+    # 5. AUTOMATED BACKUP: If index.html is still missing in publish layout, grab it directly from source control workspace
     if (-not (Test-Path "$wwwrootPath/index.html")) {
-        Write-Host "Copying index.html from source root folder to ensure structure..."
+        Write-Host "Publish skipped index.html. Pulling directly from source workspace repository..."
         Copy-Item -Path "$(Build.SourcesDirectory)/wwwroot/index.html*" -Destination "$wwwrootPath/" -Force -ErrorAction SilentlyContinue
     }
-  displayName: 'Publish Solution Output and Force Structure wwwroot'
+  displayName: 'Publish Solution Output and Fully Automated wwwroot Handling'
 
 - task: ArchiveFiles@2
   displayName: 'Zip Publish Output'
