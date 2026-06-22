@@ -33,18 +33,25 @@ steps:
     # 1. Run standard compilation output
     dotnet publish HttpLab.csproj --configuration Release --output $(Build.ArtifactStagingDirectory)/publish
 
-    # 2. Setup directory tracking
+    # 2. Setup directory tracking paths
     $publishPath = "$(Build.ArtifactStagingDirectory)/publish"
     $wwwrootPath = "$publishPath/wwwroot"
 
-    # 3. Create wwwroot if it doesn't already exist
+    # 3. Create wwwroot folder structure if it doesn't already exist
     if (-not (Test-Path -Path $wwwrootPath)) {
-        New-Item -ItemType Directory -Force -Path $wwwrootPath
+        Write-Host "Creating wwwroot folder structure..."
+        New-Item -ItemType Directory -Force -Path $wwwrootPath | Out-Null
     }
 
     # 4. Check if files are loose in root and move them inside wwwroot
     if (Test-Path -Path "$publishPath/index.html*") {
-        Move-Item -Path "$publishPath/index.html*" -Destination "$wwwrootPath/"
+        Move-Item -Path "$publishPath/index.html*" -Destination "$wwwrootPath/" -Force
+    }
+
+    # 5. AUTOMATED BACKUP: If index.html is missing from publish layout, copy it directly from your source wwwroot folder
+    if (-not (Test-Path "$wwwrootPath/index.html")) {
+        Write-Host "Publish skipped index.html. Pulling directly from source workspace repository..."
+        Copy-Item -Path "$(Build.SourcesDirectory)/wwwroot/index.html*" -Destination "$wwwrootPath/" -Force -ErrorAction SilentlyContinue
     }
   displayName: 'Publish Solution Output and Structure Check'
 
