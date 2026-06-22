@@ -1,0 +1,26 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "gemini-1.5-pro",
+  "mcp": {
+    "azure-devops": {
+      "type": "local",
+      "command": ["npx", "-y", "@azure-devops/mcp", "--authentication", "pat"],
+      "enabled": true,
+      "environment": {
+        "PERSONAL_ACCESS_TOKEN": "{env:MY_PERSONAL_DEVOPS_PAT}"
+      }
+    },
+    "github": {
+      "type": "local",
+      "command": [
+        "docker", "run", "-i", "--rm",
+        "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "enabled": true,
+      "environment": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{env:MY_PERSONAL_GITHUB_PAT}"
+      }
+    }
+  }
+}
