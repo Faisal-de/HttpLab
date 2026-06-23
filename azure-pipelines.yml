@@ -17,7 +17,7 @@ steps:
     dotnet restore HttpLab.csproj
   displayName: 'Restore NuGet Packages'
 - script: |
-    dotnet format --verify-no-changes --verbosity normal
+    dotnet format HttpLab.csproj --verify-no-changes --verbosity normal
   displayName: 'Verify Code Style & Formatting'
 - script: |
     dotnet build HttpLab.csproj --configuration Release
