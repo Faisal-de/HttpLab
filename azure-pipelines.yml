@@ -20,9 +20,11 @@ steps:
 - script: |
     dotnet restore HttpLab.csproj
   displayName: 'Restore NuGet Packages'
+
 - script: |
     dotnet format HttpLab.sln --verify-no-changes --verbosity normal
   displayName: 'Verify Code Style & Formatting'
+
 - script: |
     dotnet build HttpLab.csproj --configuration Release
   displayName: 'Build Project'
@@ -31,9 +33,11 @@ steps:
     dotnet add HttpLab.csproj package Microsoft.EntityFrameworkCore.Design --version 8.0.11
   displayName: 'Add EF Core Design Package'
 
+# 🎯 GUARDED STEP: This will only run when code is officially merged/pushed into 'main'
 - script: |
     dotnet tool run dotnet-ef database update --project HttpLab.csproj --startup-project HttpLab.csproj --connection "$(DB_CONNECTION_STRING)"
-  displayName: 'Apply Database Migrations'
+  displayName: 'Apply Production Database Migrations'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
 
 - powershell: |
     # 1. Setup a clean static layout target path
