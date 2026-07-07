@@ -1,9 +1,7 @@
 trigger:
   - main 
   - development
-pr: 
-  - main
-  - development
+pr: none
 
 pool:
   name: Default
