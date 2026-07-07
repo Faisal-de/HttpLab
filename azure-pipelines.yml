@@ -1,9 +1,7 @@
 trigger:
   - main 
   - development
-pr: 
-  - main
-  - development
+pr: none
 
 pool:
   name: Default
@@ -20,9 +18,11 @@ steps:
 - script: |
     dotnet restore HttpLab.csproj
   displayName: 'Restore NuGet Packages'
+
 - script: |
     dotnet format HttpLab.sln --verify-no-changes --verbosity normal
   displayName: 'Verify Code Style & Formatting'
+
 - script: |
     dotnet build HttpLab.csproj --configuration Release
   displayName: 'Build Project'
@@ -30,10 +30,11 @@ steps:
 - script: |
     dotnet add HttpLab.csproj package Microsoft.EntityFrameworkCore.Design --version 8.0.11
   displayName: 'Add EF Core Design Package'
-
+  
 - script: |
     dotnet tool run dotnet-ef database update --project HttpLab.csproj --startup-project HttpLab.csproj --connection "$(DB_CONNECTION_STRING)"
-  displayName: 'Apply Database Migrations'
+  displayName: 'Apply Branch Specific Database Migrations'
+  condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq(variables['Build.SourceBranch'], 'refs/heads/development')))
 
 - powershell: |
     # 1. Setup a clean static layout target path

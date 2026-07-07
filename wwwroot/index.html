@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Student Management Portal - Production</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 30px; background: #1e1e24; color: #333; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 30px; background: #f3f0f0 ; color: #ece7e7; }
         .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
         .input-area { background: #eef2f3; padding: 20px; border-radius: 8px; margin-bottom: 30px; display: flex; gap: 10px; align-items: center; }
@@ -32,7 +32,7 @@
             <input type="password" id="passwordInput" placeholder="Password (e.g., pass123 or admin123)">
             <button class="btn-login" onclick="handleLogin()" style="display: none;">Secure Sign In</button>
         </div>
-        <p style="text-align: center; color: #888; font-size: 12px; margin-top: 20px;">© 2026 Faisal DevOps Lab. All Rights Reserved.</p>
+        <p style="text-align: center; color: #888; font-size: 12px; margin-top: 20px;">QA Testing Version 1.0</p>
     </div>
 
     <div id="studentDashboard" class="hidden">
@@ -72,7 +72,7 @@
         const response = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: user, password: pass })
+            body: JSON.stringify({ username: user, password : pass })
         });
 
         if (response.status === 200) {
