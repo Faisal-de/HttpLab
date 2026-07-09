@@ -1,8 +1,9 @@
 trigger:
-  include :
-  - development
-  exclude:
-  - main
+  branches:
+    include :
+      - development
+    exclude:
+      - main
 pr: none
 
 pool:
