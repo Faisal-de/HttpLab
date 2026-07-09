@@ -1,6 +1,8 @@
 trigger:
-  - main 
+  include :
   - development
+  exclude:
+  - main
 pr: none
 
 pool:
